@@ -1,0 +1,62 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Admin {
+  id        String   @id @default(uuid())
+  nama      String
+  email     String   @unique
+  noWa      String
+  poto      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Teacher {
+  id        String    @id @default(uuid())
+  nama      String
+  email     String    @unique
+  noWa      String
+  poto      String
+  students  Student[] // One-to-Many relationship mapping
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}
+
+model Student {
+  id        String   @id @default(uuid())
+  nama      String
+  email     String   @unique
+  noWa      String
+  poto      String
+  teacherId String
+  teacher   Teacher  @relation(fields: [teacherId], references: [id])
+  tugas     Tugas[]  // Links to task uploads
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model LearningDeck {
+  id        String   @id @default(uuid())
+  pertemuan String   // e.g., "pertemuan1", "pertemuan2", "pertemuan3"
+  pdfPath   String   
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Tugas {
+  id        String   @id @default(uuid())
+  tugasKe   String   // e.g., "tugas1", "tugas2", "tugas3"
+  pdfPath   String   
+  nilai     Int?     // Nullable field until graded
+  catatan   String?  // Nullable field until graded
+  studentId String
+  student   Student  @relation(fields: [studentId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
