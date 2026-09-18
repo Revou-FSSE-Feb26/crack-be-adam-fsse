@@ -1,26 +1,29 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Optional } from '@nestjs/common';
 import { CreateTugasDto } from './dto/create-tugas.dto';
 import { UpdateTugasDto } from './dto/update-tugas.dto';
+import { PrismaService } from '../prisma/prisma.service';
 
 @Injectable()
 export class TugasService {
+  constructor(@Optional() private readonly prisma: PrismaService) {}
+
   create(createTugasDto: CreateTugasDto) {
-    return 'This action adds a new tugas';
+    return this.prisma.tugas.create({ data: createTugasDto });
   }
 
-  findAll() {
-    return `This action returns all tugas`;
+  findAll(status?: 'SUBMITTED' | 'GRADED' | 'RESUBMIT') {
+    return this.prisma.tugas.findMany({ where: status ? { status } : undefined, include: { student: true } });
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} tugas`;
+  findOne(id: string) {
+    return this.prisma.tugas.findUniqueOrThrow({ where: { id }, include: { student: true } });
   }
 
-  update(id: number, updateTugasDto: UpdateTugasDto) {
-    return `This action updates a #${id} tugas`;
+  update(id: string, updateTugasDto: UpdateTugasDto) {
+    return this.prisma.tugas.update({ where: { id }, data: updateTugasDto });
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} tugas`;
+  remove(id: string) {
+    return this.prisma.tugas.delete({ where: { id } });
   }
 }

@@ -7,8 +7,35 @@ generator client {
   provider = "prisma-client-js"
 }
 
+enum Role {
+  ADMIN
+  TEACHER
+  STUDENT
+}
+
+enum TugasStatus {
+  SUBMITTED
+  GRADED
+  RESUBMIT
+}
+
+model User {
+  id           String   @id @default(uuid())
+  nama         String
+  email        String   @unique
+  passwordHash String
+  role         Role
+  admin        Admin?
+  teacher      Teacher?
+  student      Student?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
 model Admin {
   id        String   @id @default(uuid())
+  userId    String?  @unique
+  user      User?    @relation(fields: [userId], references: [id])
   nama      String
   email     String   @unique
   noWa      String
@@ -19,6 +46,8 @@ model Admin {
 
 model Teacher {
   id        String    @id @default(uuid())
+  userId    String?   @unique
+  user      User?     @relation(fields: [userId], references: [id])
   nama      String
   email     String    @unique
   noWa      String
@@ -30,6 +59,8 @@ model Teacher {
 
 model Student {
   id        String   @id @default(uuid())
+  userId    String?  @unique
+  user      User?    @relation(fields: [userId], references: [id])
   nama      String
   email     String   @unique
   noWa      String
@@ -55,6 +86,7 @@ model Tugas {
   pdfPath   String   
   nilai     Int?     // Nullable field until graded
   catatan   String?  // Nullable field until graded
+  status    TugasStatus @default(SUBMITTED)
   studentId String
   student   Student  @relation(fields: [studentId], references: [id])
   createdAt DateTime @default(now())

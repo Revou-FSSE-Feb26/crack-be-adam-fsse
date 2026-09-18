@@ -1,4 +1,10 @@
-import { PartialType } from '@nestjs/mapped-types';
 import { CreateTugasDto } from './create-tugas.dto';
 
-export class UpdateTugasDto extends PartialType(CreateTugasDto) {}
+export class UpdateTugasDto {
+	tugasKe?: CreateTugasDto['tugasKe'];
+	pdfPath?: CreateTugasDto['pdfPath'];
+	studentId?: CreateTugasDto['studentId'];
+	nilai?: number;
+	catatan?: string;
+	status?: 'SUBMITTED' | 'GRADED' | 'RESUBMIT';
+}

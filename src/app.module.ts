@@ -6,9 +6,11 @@ import { StudentsModule } from './students/students.module';
 import { AdminsModule } from './admins/admins.module';
 import { LearningDecksModule } from './learning-decks/learning-decks.module';
 import { TugasModule } from './tugas/tugas.module';
+import { PrismaModule } from './prisma/prisma.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
-  imports: [TeachersModule, StudentsModule, AdminsModule, LearningDecksModule, TugasModule],
+  imports: [PrismaModule, AuthModule, TeachersModule, StudentsModule, AdminsModule, LearningDecksModule, TugasModule],
   controllers: [AppController],
   providers: [AppService],
 })

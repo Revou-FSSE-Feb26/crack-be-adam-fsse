@@ -1,26 +1,29 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Optional } from '@nestjs/common';
 import { CreateLearningDeckDto } from './dto/create-learning-deck.dto';
 import { UpdateLearningDeckDto } from './dto/update-learning-deck.dto';
+import { PrismaService } from '../prisma/prisma.service';
 
 @Injectable()
 export class LearningDecksService {
+  constructor(@Optional() private readonly prisma: PrismaService) {}
+
   create(createLearningDeckDto: CreateLearningDeckDto) {
-    return 'This action adds a new learningDeck';
+    return this.prisma.learningDeck.create({ data: createLearningDeckDto });
   }
 
-  findAll() {
-    return `This action returns all learningDecks`;
+  findAll(search?: string) {
+    return this.prisma.learningDeck.findMany({ where: search ? { pertemuan: { contains: search, mode: 'insensitive' } } : undefined });
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} learningDeck`;
+  findOne(id: string) {
+    return this.prisma.learningDeck.findUniqueOrThrow({ where: { id } });
   }
 
-  update(id: number, updateLearningDeckDto: UpdateLearningDeckDto) {
-    return `This action updates a #${id} learningDeck`;
+  update(id: string, updateLearningDeckDto: UpdateLearningDeckDto) {
+    return this.prisma.learningDeck.update({ where: { id }, data: updateLearningDeckDto });
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} learningDeck`;
+  remove(id: string) {
+    return this.prisma.learningDeck.delete({ where: { id } });
   }
 }

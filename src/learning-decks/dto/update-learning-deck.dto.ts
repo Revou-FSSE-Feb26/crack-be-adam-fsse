@@ -1,4 +1,6 @@
-import { PartialType } from '@nestjs/mapped-types';
 import { CreateLearningDeckDto } from './create-learning-deck.dto';
 
-export class UpdateLearningDeckDto extends PartialType(CreateLearningDeckDto) {}
+export class UpdateLearningDeckDto {
+	pertemuan?: CreateLearningDeckDto['pertemuan'];
+	pdfPath?: CreateLearningDeckDto['pdfPath'];
+}
